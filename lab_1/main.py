@@ -10,7 +10,7 @@ def f(x):
 # определение производной
 def df(x):
     return -10 * math.sin(x) - 0.2 * x
-
+# процедура отделения корней
 def tabulation_approach(a, b, step):
     intervals = []  # Список для хранения отрезков изменения знака
     sign_changes = 0 # счетчик изменений знака
@@ -29,6 +29,7 @@ def tabulation_approach(a, b, step):
 
     print(f"Отрезки изменения знака: {', '.join(map(lambda interval: f'[{interval[0]:.4f}, {interval[1]:.4f}]', intervals))}")
     print(f"Количество отрезков изменения знака: {sign_changes}")
+# Метод бисекции
 def bisection (a,b,n, eps): # отрезок от a до b делим на n частей, погрешность eps
     assert a!=0,  'a равно 0'
     assert b!=0, 'b равно 0'
@@ -68,6 +69,35 @@ def newton_method(initial_guess, eps):
         x0 = x1 # изменение предположения
 
     return x1, count
+# Модифицированный метод Ньютона
+def modified_newton(f, df, x0, eps = 1e-5, max_iter=1000):
+    x = x0
+    iteration = 0
+
+    while True:
+        x_new = x - f(x) / df(x0) # обновление значения x  по формуле Ньютона
+        iteration += 1
+        # проверка условия сходимости или достижения максимального количества итераций
+        if abs(x_new - x) < eps or iteration >= max_iter:
+            break
+
+        x = x_new
+
+    return x_new, iteration
+def secant_method(f, x0, x1, eps = 1e-5, max_iter=100):
+    iterations = 0
+
+    while iterations < max_iter:
+        x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0))
+
+        if abs(x2 - x1) < eps:
+            return x2, iterations
+
+        x0 = x1
+        x1 = x2
+        iterations += 1
+
+    raise Exception("Не удалось найти корень методом секущих")
 print("Функция f(x): 10 * cos(x) - 0.1 * x**2")
 print("Параметры:\nЛевая граница: {}\nПравая граница: {}\nТочность: {}".format(left_border, right_border, eps))
 print("Метод бисекции:")
@@ -82,4 +112,19 @@ root, iterations = newton_method(initial_guess, eps)
 
 print(f"Корень методом Ньютона: {root:.6f}")
 print(f"Количество итераций: {iterations}")
+
+print("Модифицированный метод Ньютона:")
+x0 = 1.5
+solution, iterations = modified_newton(f, df, x0)
+
+print("Корень: {:.7f}".format(solution))
+print("Количество итераций:", iterations)
+print("Метод секущих: ")
+x0 = 1
+x1 = 2
+
+solution_secant, iterations_secant = secant_method(f, x0, x1)
+print("Корень уравнения {:.7f}:".format(solution_secant))
+print("Количество итераций:", iterations_secant)
+
 
