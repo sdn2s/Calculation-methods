@@ -63,14 +63,13 @@ def newton(initial_guess, eps):
 
     while True:
         x = x0 - f(x0) / df(x0) # основная формула метода Ньютона
-        count += 1
 
         if abs(x - x0) < eps: # проверка точности
-            break
+            return x, count
 
         x0 = x # изменение предположения
+        count += 1
 
-    return x, count
 # Модифицированный метод Ньютона
 def modified_newton_method(f, df, x0, alpha=1.0, eps=1e-5):
     x = x0
