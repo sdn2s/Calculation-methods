@@ -72,20 +72,19 @@ def newton(initial_guess, eps):
 
     return x, count
 # Модифицированный метод Ньютона
-def modified_newton(f, df, x0, eps = 1e-5):
+def modified_newton_method(f, df, x0, alpha=1.0, eps=1e-5):
     x = x0
-    iteration = 0
+    iterations = 0
 
     while True:
-        x_n = x - f(x) / df(x0) # обновление значения x  по формуле Ньютона
-        iteration += 1
-        # проверка условия сходимости
+        x_n = x - alpha * f(x) / df(x)
+
         if abs(x_n - x) < eps:
-            break
+            return x_n, iterations
 
         x = x_n
+        iterations += 1
 
-    return x_n, iteration
 def secant_method(f, a, b, eps = 1e-5):
     iterations = 0
     # Вычисление нового приближения x2 с использованием метода секущих
@@ -116,7 +115,7 @@ print(f"Количество итераций: {iterations}")
 
 print("Модифицированный метод Ньютона:")
 x0 = 1.5
-solution, iterations = modified_newton(f, df, x0)
+solution, iterations = modified_newton_method(f, df, x0)
 print("Корень: {:.7f}".format(solution))
 print("Количество итераций:", iterations)
 
